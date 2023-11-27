@@ -1,0 +1,52 @@
+﻿#MainContainer {
+    padding: 0 3vw;
+    margin-left: auto;
+    margin-right: auto;
+    min-height: 100vh;
+    overflow-x: hidden;
+    background-color: #DBDBDB;
+}
+
+#addBtn {
+    background-color: #F4A259;
+    border-radius: 50%;
+    border: none;
+    width: 15vw;
+    height: 15vw;
+    position: fixed;
+    bottom: 5vh;
+    right: 5vh;
+}
+
+#addBtnImg{
+    width: 60%;
+    height: 60%;
+    object-fit:cover;
+}
+
+#notesGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 3vw;
+    grid-template-rows: minmax(10vh, auto);
+}
+
+#searchBlock{
+    width:100%;
+    height:5vh;
+    border-radius:2vh;
+    background-color:white;
+    margin-bottom:2vh;
+    display:flex;
+}
+
+#searchImg{
+    margin: 0.4vh 2vw;
+}
+
+#searchInput {
+    flex-grow: 1;
+    border: none;
+    background-color:transparent;
+    outline:none;
+}

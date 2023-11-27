@@ -1,0 +1,1 @@
+C:\Users\vitus\Desktop\Vs Projects\BlazorNotesApp\BlazorNotesApp\BlazorNotesApp.csproj;x64

@@ -1,0 +1,76 @@
+﻿@using Code.Models
+
+@if(note == null)
+{
+	<p>Note is not available</p>
+}
+else
+{
+	<div @onclick="OpenNote" id="MainContainer">
+		<h3 id="title">@note.title</h3>
+		<p id="body">@BodyText</p>
+		<p id="date">@DateText</p>
+	</div>
+}
+
+@code{
+	[Parameter]
+	public Note note { get; set; }
+
+	[Inject] private NavigationManager navigationManager { get; set; }
+
+	public async Task OpenNote()
+	{
+		if (note == null) return;
+		navigationManager.NavigateTo($"/opennote/{note.id}");
+	}
+
+	public string DateText
+	{
+		get
+		{
+			if (note == null) return string.Empty;
+
+			DateTime currentDate = DateTime.Now.Date;
+			DateTime publishedAt = note.publishedAt;
+
+			string result = string.Empty;
+
+			if (publishedAt.Date.Equals(currentDate)) result = publishedAt.ToString("HH:mm");
+			else if (publishedAt.Date >= currentDate.AddDays(-6) && publishedAt.Date < currentDate)
+			{
+				string dayOfWeek = publishedAt.ToString("dddd");
+				result = $"{dayOfWeek} {publishedAt.ToString("HH:mm")}";
+			}
+			else if (publishedAt.Year == currentDate.Year)
+			{
+				result = publishedAt.ToString("dd MMMM");
+			}
+			else
+			{
+				result = publishedAt.ToString("dd MMMM yyyy");
+			}
+
+			return result;
+		}
+	}
+
+	private const int maxSymbols = 15;
+
+	public string BodyText
+	{
+		get
+		{
+			if (note == null) return string.Empty;
+
+			string text = note.body;
+
+			if (string.IsNullOrEmpty(text)) return string.Empty;
+			if (text.Length <= maxSymbols) return text;
+			else
+			{
+				return text.Substring(0, maxSymbols - 3) + "...";
+			}
+		}
+	}
+}

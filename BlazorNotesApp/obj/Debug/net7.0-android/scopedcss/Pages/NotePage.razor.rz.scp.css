@@ -1,0 +1,45 @@
+#MainContainer[b-qiwcv8w0tb]{
+    padding: 4vw;
+}
+
+#topBar[b-qiwcv8w0tb]{
+    position:sticky;
+
+    width:100%;
+
+    height:5vh;
+
+    display:flex;
+
+    justify-content:space-between;
+}
+
+.btn[b-qiwcv8w0tb]{
+    height:100%;
+}
+
+.btnImg[b-qiwcv8w0tb]{
+    height:90%;
+    width:90%;
+}
+
+.textInput[b-qiwcv8w0tb] {
+    width: 100%;
+    word-wrap: break-word;
+    height: auto;
+    border:none;
+}
+
+#title[b-qiwcv8w0tb]{
+    margin: 3vh 0;
+}
+
+#deleteBtn[b-qiwcv8w0tb] {
+    border: none;
+    background-color: transparent;
+    width: 15vw;
+    height: 15vw;
+    position: fixed;
+    bottom: 5vh;
+    right: 5vh;
+}

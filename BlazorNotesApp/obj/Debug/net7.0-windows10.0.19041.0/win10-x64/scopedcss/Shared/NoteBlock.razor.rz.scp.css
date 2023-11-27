@@ -1,0 +1,27 @@
+body[b-gkxv8ae053] {
+}
+
+#MainContainer[b-gkxv8ae053]{
+    border-radius: 15%;
+    border: none;
+    background-color:white;
+
+    padding: 2vw;
+
+    display:flex;
+    flex-direction:column;
+}
+
+#title[b-gkxv8ae053]{
+
+}
+
+#body[b-gkxv8ae053]{
+
+}
+
+#date[b-gkxv8ae053]{
+    align-self: flex-start;
+    justify-self:end;
+    margin-top: auto;
+}

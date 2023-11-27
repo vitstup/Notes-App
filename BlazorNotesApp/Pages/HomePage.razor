@@ -1,0 +1,77 @@
+﻿@inject NavigationManager navigationManager;
+@using Code.Databases;
+@using Code.Models;
+
+@page "/" 
+
+<div id="MainContainer">
+	<h1>Welcome @Usermane !</h1>
+
+	<div id="searchBlock">
+		<img src="images/search.png" id="searchImg"/>
+		<input placeholder="search nontes" id="searchInput" @bind="findValue" @bind:event="oninput" />
+	</div>
+
+	<div id="notesGrid">
+		@if (notes != null)
+		{
+			@foreach (var note in notes)
+			{
+				<NoteBlock note="note"></NoteBlock>
+			}
+		}
+	</div>
+</div>
+
+<button @onclick="AddNote" id="addBtn">
+	<img src="images/plus.png" id="addBtnImg" />
+</button>
+
+
+@code {
+
+	[Inject] private NotesDb notesDb { get; set; }
+
+	private string Usermane
+	{
+		get => Environment.UserName;
+	}
+
+	private string findValue;
+
+	private Note[] _notes;
+	private Note[] notes
+	{
+		get
+		{
+			return FindNotes(findValue)?.ToArray();
+		}
+		set
+		{
+			_notes = value;
+		}
+	}
+
+	private async Task AddNote()
+	{
+		navigationManager.NavigateTo("/opennote/-1");
+	}
+
+	protected override async Task OnInitializedAsync()
+	{
+		var notes = await GetNotes();
+		this.notes = notes.OrderByDescending(note => note.publishedAt).ToArray();
+	}
+
+	private async Task<IEnumerable<Note>> GetNotes()
+	{
+		return await notesDb.GetNotes();
+	}
+
+	private IEnumerable<Note> FindNotes(string findValue)
+	{
+		if (string.IsNullOrWhiteSpace(findValue)) return _notes;
+		if (_notes == null || _notes.Length == 0) return null;
+		return _notes.Where(_note => _note.title.IndexOf(findValue, StringComparison.OrdinalIgnoreCase) >= 0 || (_note.body != null && _note.body.IndexOf(findValue, StringComparison.OrdinalIgnoreCase) >= 0));
+	}
+}

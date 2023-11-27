@@ -1,0 +1,27 @@
+﻿body {
+}
+
+#MainContainer{
+    border-radius: 15%;
+    border: none;
+    background-color:white;
+
+    padding: 2vw;
+
+    display:flex;
+    flex-direction:column;
+}
+
+#title{
+
+}
+
+#body{
+
+}
+
+#date{
+    align-self: flex-start;
+    justify-self:end;
+    margin-top: auto;
+}

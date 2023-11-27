@@ -1,0 +1,125 @@
+﻿@page "/opennote/{id:int}"
+
+@using BlazorNotesApp.Code.Databases;
+@using BlazorNotesApp.Code.Models;
+
+<div id="MainContainer">
+	<div id="topBar">
+		<button @onclick="Back" class="btn">
+			<img src="images/back.png" class="btnImg" />
+		</button>
+
+		<button @onclick="AddNote" class="btn" style="display: @visibility">
+			<img src="images/check.png" class="btnImg" />
+		</button>
+	</div>
+
+	<input @bind="title" @bind:event="oninput" placeholder="Title" class="textInput" id="title" />
+
+	<textarea @bind="body" @bind:event="oninput" class="textInput" />
+</div>
+
+<button @onclick="Delete" id="deleteBtn">
+	<img src="images/delete.png" class="btnImg" />
+</button>
+
+<script>
+	document.addEventListener("input", function (event) {
+		if (event.target.tagName.toLowerCase() !== "textarea") return;
+		autoExpand(event.target);
+	}, false);
+
+	function autoExpand(textarea) {
+		textarea.style.height = "auto";
+		textarea.style.height = (textarea.scrollHeight) + "px";
+	}
+</script>
+
+
+@code {
+
+	[Inject] private NavigationManager navigationManager { get; set; }
+	[Inject] private NotesDb notesDb { get; set; }
+
+	[Parameter] public int id { get; set; }
+
+	private string _title;
+	private string title { get => _title; set { _title = value; CheckForAddNote(); } }
+	private string body;
+
+	private string visibility = "none";
+
+	protected override async Task OnInitializedAsync()
+	{
+		await TryToOpenNote();
+	}
+
+	private async Task TryToOpenNote()
+	{
+		if (id < 0) return;
+		Note openedNote = await notesDb.GetNoteById(id);
+		title = openedNote.title;
+		body = openedNote.body;
+	}
+
+	public async Task Back()
+	{
+		navigationManager.NavigateTo("/");
+	}
+
+	public async Task AddNote()
+	{
+		if (string.IsNullOrWhiteSpace(title))
+		{
+			await App.Current.MainPage.DisplayAlert("Whoops", "Please enter title before trying to save note", "Ok");
+			return;
+		}
+
+		try
+		{
+			int id = this.id >= 0 ? this.id : 0;
+			bool wasChanged = id > 0;
+			Note note = new Note()
+			{
+				title = title,
+				body = body,
+				publishedAt = DateTime.Now,
+				id = id,
+				wasChanged = wasChanged,
+			};
+			await notesDb.SaveNote(note);
+		}
+		catch (Exception ex)
+		{
+			await App.Current.MainPage.DisplayAlert("Error", $"error: {ex}", "Ok");
+		}
+
+		await Back();
+	}
+
+	public void CheckForAddNote()
+	{
+		if (string.IsNullOrWhiteSpace(title)) visibility = "none";
+		else visibility = "block";
+	}
+
+	public async Task Delete()
+	{
+		var answer = await App.Current.MainPage.DisplayAlert(
+			"Delete", "Are you sure that you want to delete this note?", "Ok", "Cancel"
+		);
+
+		if (answer)
+		{
+			if (id < 0)
+			{
+				await Back();
+				return;
+			}
+
+			await notesDb.RemoveNoteById(id);
+
+			await Back();
+		}
+	}
+}
